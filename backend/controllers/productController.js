@@ -3,7 +3,7 @@ const asyncHandler = require('express-async-handler');
 
 // Fetch all products
 const getProducts = asyncHandler(async (req, res) => {
-    const products = await Product.find({});
+    const products = await Product.find();
     res.json(products);
 });
 
@@ -22,6 +22,9 @@ const getProductById = asyncHandler(async (req, res) => {
 // Fetch products by categoryId
 const getProductsByCategory = asyncHandler(async (req, res) => {
     const categoryId = req.params.categoryId;
+    if (!categoryId) {
+        return res.status(400).json({ message: 'Category ID is required' });
+    }
     const products = await Product.find({ categoryId });
 
     if (products.length > 0) {

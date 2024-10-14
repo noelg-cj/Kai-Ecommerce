@@ -82,7 +82,15 @@ const clearCart = asyncHandler(async (req, res) => {
 const getCart = asyncHandler(async (req,res)=>{
     const userId=req.params.userId
     const cart = await Cart.findOne({userId}).populate('orderItems.product')
-    if (!cart) return res.status(404).json({ message: 'Cart not found' });
+    if (!cart) {
+        cart = new Cart({
+            userId: userId,
+            orderItems: [],
+            totalPrice: 0,
+        });
+        const newCart= await cart.save()
+        return res.status(404).json({ message: 'Cart empty' });
+    }
     res.status(200).json(cart);
 })
 

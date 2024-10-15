@@ -1,9 +1,30 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import bag from "../../assets/BAG.png"
 import ItemCard from '../../Components/ItemCard'
 import Navbar from '../../Components/Navbar'
 
 const Shop = () => {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('http://localhost:5000/api/product/stock', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+      }
+    });
+
+      if (!response.ok) {
+        console.log('Failed to fetch');
+
+        const result = await response.json();
+        setProducts(result);
+      }
+    }
+    fetchData();
+  }, []);
+
+  console.log(products);
   return (
     <div className='font-Satoshi bg-[#E6E6FA]'>
       <Navbar />
